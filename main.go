@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand/v2"
+)
 
 type account struct {
 	login    string
@@ -9,6 +12,8 @@ type account struct {
 }
 
 func main() {
+	fmt.Println(rand.IntN(10))
+
 	login := promptData("Введите логин")
 	password := promptData("Введите пароль")
 	url := promptData("Введите url")
@@ -32,6 +37,11 @@ func promptData(prompt string) string {
 func outputPassword(acc *account) {
 	fmt.Println(acc.login, acc.password, acc.url)
 }
+
+// str := []rune("Привет!)")
+// for _, ch := range str {
+// 	fmt.Println(ch, string(ch))
+// }
 
 // a := [4]int{1, 2, 3, 4}
 // 	reverse(&a)
