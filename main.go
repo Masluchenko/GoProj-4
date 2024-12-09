@@ -12,6 +12,10 @@ type account struct {
 }
 
 func main() {
+	var pidr int
+	fmt.Scan(&pidr)
+	outputPassword(pidr)
+
 	fmt.Println(rand.IntN(10))
 
 	login := promptData("Введите логин")
@@ -25,6 +29,7 @@ func main() {
 	}
 
 	outputPassword(&myAccount)
+
 }
 
 func promptData(prompt string) string {
@@ -36,6 +41,10 @@ func promptData(prompt string) string {
 
 func outputPassword(acc *account) {
 	fmt.Println(acc.login, acc.password, acc.url)
+}
+
+func generatePassword(n int) string {
+	fmt.Println()
 }
 
 // str := []rune("Привет!)")
