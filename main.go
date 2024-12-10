@@ -11,25 +11,33 @@ type account struct {
 	url      string
 }
 
-func main() {
-	var pidr int
-	fmt.Scan(&pidr)
-	outputPassword(pidr)
+func (acc account) outputPassword() {
+	fmt.Println(acc.login, acc.password, acc.url)
+}
 
-	fmt.Println(rand.IntN(10))
+func (acc *account) generatePassword(n int) {
+	res := make([]rune, n)
+	for i := range res {
+		res[i] = letterRunes[rand.IntN(len(letterRunes))]
+	}
+	acc.password = string(res)
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWYZ123456789*!")
+
+func main() {
 
 	login := promptData("Введите логин")
-	password := promptData("Введите пароль")
+	// password := promptData("Введите пароль")
 	url := promptData("Введите url")
 
 	myAccount := account{
-		password: password,
-		login:    login,
-		url:      url,
+		// password: password,
+		login: login,
+		url:   url,
 	}
-
-	outputPassword(&myAccount)
-
+	myAccount.generatePassword(12)
+	myAccount.outputPassword()
 }
 
 func promptData(prompt string) string {
@@ -39,13 +47,13 @@ func promptData(prompt string) string {
 	return res
 }
 
-func outputPassword(acc *account) {
-	fmt.Println(acc.login, acc.password, acc.url)
-}
-
-func generatePassword(n int) string {
-	fmt.Println()
-}
+// func generatePassword(n int) string {
+// 	res := make([]rune, n)
+// 	for i := range res {
+// 		res[i] = letterRunes[rand.IntN(len(letterRunes))]
+// 	}
+// 	return string(res)
+// }
 
 // str := []rune("Привет!)")
 // for _, ch := range str {
