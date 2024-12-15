@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math/rand/v2"
 	"net/url"
@@ -19,7 +20,7 @@ func (acc account) outputPassword() {
 func newAccount(login, password, urlString string) (*account, error) {
 	_, err := url.ParseRequestURI(urlString)
 	if err != nil {
-		return nil, errors.New("Invalid URL") errorserr
+		return nil, errors.New("Invalid URL")
 	}
 	return &account{
 		url:      urlString,
