@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math/rand/v2"
+	"net/url"
 )
 
 type account struct {
@@ -23,27 +25,49 @@ func (acc *account) generatePassword(n int) {
 	acc.password = string(res)
 }
 
+func errLogPassw() {}
+
+func newAccount(login, password, urlString string) (*account, error) {
+	if login == "" {
+		return nil, errors.New("INVALID_LOGIN")
+	}
+
+	_, err := url.ParseRequestURI(urlString)
+	if err != nil {
+		return nil, errors.New("INVALID_URL")
+	}
+
+	newAcc := &account{
+		password: password,
+		login:    login,
+		url:      urlString,
+	}
+	if password == "" {
+		newAcc.generatePassword(12)
+	}
+	return newAcc, nil
+}
+
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWYZ123456789*!")
 
 func main() {
 
 	login := promptData("Введите логин")
-	// password := promptData("Введите пароль")
+	password := promptData("Введите пароль")
 	url := promptData("Введите url")
 
-	myAccount := account{
-		// password: password,
-		login: login,
-		url:   url,
+	myAccount, err := newAccount(login, password, url)
+	if err != nil {
+		fmt.Println("Неверный формат URL или LOGIN")
+		return
 	}
-	myAccount.generatePassword(12)
 	myAccount.outputPassword()
 }
 
 func promptData(prompt string) string {
 	fmt.Print(prompt + ": ")
 	var res string
-	fmt.Scan(&res)
+	fmt.Scanln(&res)
 	return res
 }
 
