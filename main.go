@@ -1,67 +1,25 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"math/rand/v2"
-	"net/url"
+
+	"example.com/m/v2/account"
+	"example.com/m/v2/files"
 )
 
-type account struct {
-	login    string
-	password string
-	url      string
-}
-
-func (acc account) outputPassword() {
-	fmt.Println(acc.login, acc.password, acc.url)
-}
-
-func (acc *account) generatePassword(n int) {
-	res := make([]rune, n)
-	for i := range res {
-		res[i] = letterRunes[rand.IntN(len(letterRunes))]
-	}
-	acc.password = string(res)
-}
-
-func errLogPassw() {}
-
-func newAccount(login, password, urlString string) (*account, error) {
-	if login == "" {
-		return nil, errors.New("INVALID_LOGIN")
-	}
-
-	_, err := url.ParseRequestURI(urlString)
-	if err != nil {
-		return nil, errors.New("INVALID_URL")
-	}
-
-	newAcc := &account{
-		password: password,
-		login:    login,
-		url:      urlString,
-	}
-	if password == "" {
-		newAcc.generatePassword(12)
-	}
-	return newAcc, nil
-}
-
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWYZ123456789*!")
-
 func main() {
-
+	files.WriteFile("ХЭЛОУ ФАЙЛ СОЗДАН", "file.txt")
 	login := promptData("Введите логин")
 	password := promptData("Введите пароль")
 	url := promptData("Введите url")
 
-	myAccount, err := newAccount(login, password, url)
+	myAccount, err := account.NewAccountWithTimeStamp(login, password, url)
 	if err != nil {
 		fmt.Println("Неверный формат URL или LOGIN")
 		return
 	}
-	myAccount.outputPassword()
+	myAccount.OutputPassword()
+
 }
 
 func promptData(prompt string) string {
