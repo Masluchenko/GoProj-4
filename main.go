@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	files.ReadFile()
 	files.WriteFile("ХЭЛОУ ФАЙЛ СОЗДАН", "file.txt")
 	login := promptData("Введите логин")
 	password := promptData("Введите пароль")
@@ -19,7 +20,6 @@ func main() {
 		return
 	}
 	myAccount.OutputPassword()
-
 }
 
 func promptData(prompt string) string {
