@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"net/url"
-	"reflect"
 	"time"
 
 	"github.com/fatih/color"
@@ -14,24 +13,15 @@ import (
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWYZ123456789*!")
 
 type Account struct {
-	login    string `demo:"login" xml:"test"`
-	password string
-	url      string
-}
-
-type AccountWithTimeStamp struct {
-	createdAt time.Time
-	updatedAt time.Time
-	Account
+	Login     string    `json:"login"`
+	Password  string    `json:"password"`
+	Url       string    `json:"url"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (acc *Account) OutputPassword() {
-	color.Red(acc.login)
-}
-
-func (acco AccountWithTimeStamp) OutputPassword() {
-	fmt.Println(acco.login, acco.password, acco.url, acco.createdAt, acco.updatedAt)
-	color.Magenta(acco.password, "Raskraska ebychaya")
+	color.Magenta(acc.Password, "Raskraska ebychaya")
 }
 
 func (acc *Account) generatePassword(n int) {
@@ -39,32 +29,43 @@ func (acc *Account) generatePassword(n int) {
 	for i := range res {
 		res[i] = letterRunes[rand.IntN(len(letterRunes))]
 	}
-	acc.password = string(res)
+	acc.Password = string(res)
 }
 
-func NewAccountWithTimeStamp(login, password, urlString string) (*AccountWithTimeStamp, error) {
+func (acc *Account) generateUrl(n int) {
+	res := make([]rune, n)
+	for i := range res {
+		res[i] = letterRunes[rand.IntN(len(letterRunes))]
+	}
+	acc.Url = "https://" + string(res) + ".com"
+
+}
+
+func NewAccount(login, password, urlString string) (*Account, error) {
 	if login == "" {
 		return nil, errors.New("INVALID_LOGIN")
 	}
+	newAcc := &Account{
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Password:  password,
+		Login:     login,
+		Url:       urlString,
+	}
 
+	if urlString == "" {
+		newAcc.generateUrl(8)
+		fmt.Println(newAcc.Url)
+	}
 	_, err := url.ParseRequestURI(urlString)
 	if err != nil {
 		return nil, errors.New("INVALID_URL")
 	}
 
-	newAcc := &AccountWithTimeStamp{
-		createdAt: time.Now(),
-		updatedAt: time.Now(),
-		acc: Account{
-			password: password,
-			login:    login,
-			url:      urlString,
-		},
-	}
-	field, _ := reflect.TypeOf(newAcc).Elem().FieldByName("login")
-	fmt.Println(string(field.Tag))
+	// field, _ := reflect.TypeOf(newAcc).Elem().FieldByName("login")
+	// fmt.Println(string(field.Tag))
 	if password == "" {
-		newAcc.acc.generatePassword(12)
+		newAcc.generatePassword(12)
 	}
 	return newAcc, nil
 }

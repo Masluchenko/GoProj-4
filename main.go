@@ -4,22 +4,56 @@ import (
 	"fmt"
 
 	"example.com/m/v2/account"
-	"example.com/m/v2/files"
 )
 
 func main() {
-	files.ReadFile()
-	files.WriteFile("ХЭЛОУ ФАЙЛ СОЗДАН", "file.txt")
+	fmt.Println("__МАНАГЕР_ПАРОЛЕЙ__")
+Menu:
+	for {
+		variant := getMenu()
+		switch variant {
+		case 1:
+			createAccount()
+		case 2:
+			findAccount()
+		case 3:
+			deleteAccount()
+		case 4:
+			break Menu
+		}
+	}
+}
+
+func getMenu() int {
+	var varik int
+	fmt.Println(`Выберите действие:
+	1. Создать аккаунт
+	2. Найти аккаунт
+	3. Удалить аккаунт
+	4. Выход`)
+	fmt.Scanln(&varik)
+	return varik
+}
+
+func createAccount() {
 	login := promptData("Введите логин")
 	password := promptData("Введите пароль")
 	url := promptData("Введите url")
-
-	myAccount, err := account.NewAccountWithTimeStamp(login, password, url)
+	myAccount, err := account.NewAccount(login, password, url)
 	if err != nil {
 		fmt.Println("Неверный формат URL или LOGIN")
 		return
 	}
-	myAccount.OutputPassword()
+	vault := account.NewVault()
+	vault.AddAccount(*myAccount)
+}
+
+func findAccount() {
+
+}
+
+func deleteAccount() {
+
 }
 
 func promptData(prompt string) string {
