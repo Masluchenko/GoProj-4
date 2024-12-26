@@ -2,6 +2,7 @@ package account
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
 
 	"example.com/m/v2/files"
@@ -27,6 +28,17 @@ func NewVault() *Vault {
 		color.Red("Не удалось разобрать файл data.json")
 	}
 	return &vault
+}
+
+func (vault *Vault) FindAccountsByUrl(url string) []Account {
+	var accounts []Account
+	for _, account := range vault.Accounts {
+		isMached := strings.Contains(account.Url, url)
+		if isMached {
+			accounts = append(accounts, account)
+		}
+	}
+	return accounts
 }
 
 func (vault *Vault) AddAccount(acc Account) {
