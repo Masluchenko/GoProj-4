@@ -3,6 +3,8 @@ package files
 import (
 	"fmt"
 	"os"
+
+	"example.com/m/v2/output"
 )
 
 type JsonDb struct {
@@ -27,12 +29,12 @@ func (db *JsonDb) Read() ([]byte, error) {
 func (db *JsonDb) Write(content []byte) {
 	file, err := os.Create(db.filename)
 	if err != nil {
-		fmt.Println("err")
+		output.PrintErorr(err)
 	}
 	_, err = file.Write(content)
 	defer file.Close()
 	if err != nil {
-		fmt.Println(err)
+		output.PrintErorr("Неверный формат URL или Логин")
 		return
 	}
 	fmt.Println("Запись успешна")
