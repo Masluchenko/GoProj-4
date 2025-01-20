@@ -10,6 +10,12 @@ import (
 	"github.com/fatih/color"
 )
 
+var menu = map[string]func(*account.VaultWithDb){
+	"1": createAccount,
+	"2": findAccount,
+	"3": deleteAccount,
+}
+
 func main() {
 	fmt.Println("__МАНАГЕР_ПАРОЛЕЙ__")
 	vault := account.NewVault(files.NewJsonDb("data.json"))
@@ -23,28 +29,21 @@ Menu:
 			"4. Выход",
 			"Выберите действие",
 		})
-		switch variant {
-		case "1":
-			createAccount(vault)
-		case "2":
-			findAccount(vault)
-		case "3":
-			deleteAccount(vault)
-		case "4":
+		menuFunc := menu[variant]
+		if menuFunc == nil {
 			break Menu
 		}
+		menuFunc(vault)
+		// switch variant {
+		// case "1":
+		// 	createAccount(vault)
+		// case "2":
+		// 	findAccount(vault)
+		// case "3":
+		// 	deleteAccount(vault)
+		// case "4":
+		// }
 	}
-}
-
-func getMenu() int {
-	var varik int
-	fmt.Println(`Выберите действие:
-	1. Создать аккаунт
-	2. Найти аккаунт
-	3. Удалить аккаунт
-	4. Выход`)
-	fmt.Scanln(&varik)
-	return varik
 }
 
 func createAccount(vault *account.VaultWithDb) {
