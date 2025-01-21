@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"example.com/m/v2/account"
 	"example.com/m/v2/files"
@@ -60,14 +61,15 @@ func createAccount(vault *account.VaultWithDb) {
 
 func findAccount(vault *account.VaultWithDb) {
 	url := promptData([]string{"Введите url для поиска"})
-	accounts := vault.FindAccountsByUrl(url)
+	accounts := vault.FindAccounts(url, func(acc account.Account, str string) bool {
+		return strings.Contains(acc.Url, str)
+	})
 	if len(accounts) == 0 {
 		color.Red("Аккаунтов не найдено")
 	}
 	for _, account := range accounts {
 		account.Output()
 	}
-
 }
 
 func deleteAccount(vault *account.VaultWithDb) {
