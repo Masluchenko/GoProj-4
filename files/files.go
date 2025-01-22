@@ -1,10 +1,10 @@
 package files
 
 import (
-	"fmt"
 	"os"
 
 	"example.com/m/v2/output"
+	"github.com/fatih/color"
 )
 
 type JsonDb struct {
@@ -37,5 +37,5 @@ func (db *JsonDb) Write(content []byte) {
 		output.PrintErorr("Неверный формат URL или Логин")
 		return
 	}
-	fmt.Println("Запись успешна")
+	color.Green("Запись успешна")
 }
