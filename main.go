@@ -6,10 +6,12 @@ import (
 	"strings"
 
 	"example.com/m/v2/account"
+	"example.com/m/v2/encrypter"
 	"example.com/m/v2/files"
 	"example.com/m/v2/output"
 
 	"github.com/fatih/color"
+	"github.com/joho/godotenv"
 )
 
 var menuVariants = []string{
@@ -30,6 +32,10 @@ var menu = map[string]func(*account.VaultWithDb){
 
 func main() {
 	fmt.Println("__МАНАГЕР_ПАРОЛЕЙ__")
+	err := godotenv.Load()
+	if err != nil {
+		output.PrintErorr("Не удалось найти Env файл")
+	}
 	res := os.Getenv("VAR")
 	fmt.Println(res)
 
@@ -38,7 +44,7 @@ func main() {
 		fmt.Println(pair[0])
 	}
 
-	vault := account.NewVault(files.NewJsonDb("data.json"))
+	vault := account.NewVault(files.NewJsonDb("data.json"), *encrypter.NewEncrypter())
 
 Menu:
 	for {
