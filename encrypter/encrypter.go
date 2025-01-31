@@ -41,7 +41,7 @@ func (enc *Encrypter) Encrypt(plainStr []byte) []byte {
 
 }
 
-func (enc *Encrypter) Decrypter(encryptedStr []byte) []byte {
+func (enc *Encrypter) Decrypt(encryptedStr []byte) []byte {
 	block, err := aes.NewCipher([]byte(enc.Key))
 	if err != nil {
 		panic(err.Error())

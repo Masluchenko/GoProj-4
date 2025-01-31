@@ -7,6 +7,7 @@ import (
 
 	"example.com/m/v2/encrypter"
 	"example.com/m/v2/output"
+	"github.com/fatih/color"
 )
 
 type ByteReader interface {
@@ -45,10 +46,13 @@ func NewVault(db Db, enc encrypter.Encrypter) *VaultWithDb {
 			enc: enc,
 		}
 	}
+
+	data := enc.Decrypt(file)
 	var vault Vault
-	err = json.Unmarshal(file, &vault)
+	err = json.Unmarshal(data, &vault)
+	color.Cyan("Найдено %d аккаунтов", len(vault.Accounts))
 	if err != nil {
-		output.PrintErorr("Не удалось разобрать файл data.json")
+		output.PrintErorr("Не удалось разобрать файл data.vault")
 		return &VaultWithDb{
 			Vault: Vault{
 				Accounts:  []Account{},
@@ -108,9 +112,10 @@ func (vault *Vault) ToBytes() ([]byte, error) {
 func (vault *VaultWithDb) save() {
 	vault.UpdatedAt = time.Now()
 	data, err := vault.Vault.ToBytes()
+	encData := vault.enc.Encrypt(data)
 	if err != nil {
 		output.PrintErorr(err)
 
 	}
-	vault.db.Write(data)
+	vault.db.Write(encData)
 }
